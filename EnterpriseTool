@@ -1,0 +1,52 @@
+from __future__ import division
+import ipywidgets as ipw
+
+output1 = ipw.Text(layout=ipw.Layout(width="70%"),  disabled=False)
+box1=ipw.HBox([ipw.Label(value="Enter Search Term", layout=ipw.Layout(width='30%')),output1])
+output2 = ipw.Dropdown(options=['India', 'Brazil', 'China', 'Pakistan'],value='India',disabled=False,layout=ipw.Layout(width="70%"))
+box2=ipw.HBox([ipw.Label(value='Country:', layout=ipw.Layout(width='30%')),output2])
+output3 = ipw.Dropdown(options=['Government', 'Private', 'Both'],value='Both',disabled=False,layout=ipw.Layout(width="70%"))
+box3=ipw.HBox([ipw.Label(value="Type", layout=ipw.Layout(width='30%')),output3])
+
+output4 = ipw.Text(description = "Output String", layout=ipw.Layout(width="80%"),  disabled=False)
+
+
+def name_link(term):
+    return term.replace(" ","+")
+
+def on_click(btn):
+    if btn.description == "OK":
+        try:
+            output4.value = str(name_link(output1.value) + output2.value + output3.value)
+        except:
+            output4.value = "ERROR"
+    elif btn.description == "Clear":
+        output1.value = ""
+        output2.value = "India"
+        output3.value = "Both"
+        output4.value = ""
+        row0.value=False
+        row1.value=False
+        row2.value=False
+        row3.value=False
+        row4.value=False
+    elif btn.description == "del":
+        output.value = output.value[:-1]
+    else:
+        output.value = output.value + btn.description
+
+def mk_btn(description):
+    btn = ipw.Button(description=description, button_style='success',layout=ipw.Layout(width='20%'))
+    btn.on_click(on_click)
+    return btn
+
+row0 = ipw.Checkbox(value=False,description='Default Search',disabled=False)
+row1 = ipw.Checkbox(value=False,description='Site Search',disabled=False)
+row2 = ipw.Checkbox(value=False,description='Annual Report',disabled=False)
+row3 = ipw.Checkbox(value=False,description='Sebi Search',disabled=False)
+row4 = ipw.HBox([mk_btn(d) for d in ("OK", "Clear", "Show Excel")], grid_template_rows='20% 20% 20% 20% 20%',grid_template_areas='''". mk_btn("OK") mk_btn("Clear") mk_btn("Show Excel") ."''')
+ipw.VBox([box1, box2, box3, row0, row1, row2, row3, row4,output4],layout=ipw.Layout(display='flex',
+                    flex_flow='column',
+                    align_items='stretch',
+                    border='solid',
+                    width='50%'))
